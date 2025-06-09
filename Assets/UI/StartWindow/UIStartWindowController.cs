@@ -31,8 +31,8 @@ namespace UI.StartWindow
 
         private void StartGame()
         {
-            _gameWindowView.Show();
-            _uiStartWindow.Hide();
+            _uiService.Show<GameWindowView>();
+            _uiService.Hide<StartWindowView>();
             
             UISubscribeButtons();
         }
