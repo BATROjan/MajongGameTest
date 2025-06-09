@@ -1,11 +1,11 @@
-﻿using UI.GameWindow;
+﻿using DefaultNamespace.Cell;
+using UI.GameWindow;
 
 namespace UI.StartWindow
 {
     public class UIStartWindowController
     {
         private StartWindowView _uiStartWindow;
-        private GameWindowView _gameWindowView;
         private readonly IUIService _uiService;
 
         public UIStartWindowController(
@@ -13,7 +13,6 @@ namespace UI.StartWindow
         {
             _uiService = uiService;
             _uiStartWindow = _uiService.Get<StartWindowView>();
-            _gameWindowView = _uiService.Get<GameWindowView>();
             
             _uiStartWindow.ShowAction += Show;
            // _uiStartWindow.HideAction += UnSubscribeButtons;
