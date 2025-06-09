@@ -2,15 +2,14 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Kolya_sGame.UI
-{
-    public class UIbutton : MonoBehaviour, IPointerClickHandler
+
+    public class UIButton : MonoBehaviour, IPointerClickHandler
     {
-        public Action OnClickButton;
+        public Action OnClick;
         
         public void OnPointerClick(PointerEventData eventData)
         {
-            OnClickButton?.Invoke();    
+            OnClick?.Invoke();
+            Debug.Log("Click");
         }
     }
-}

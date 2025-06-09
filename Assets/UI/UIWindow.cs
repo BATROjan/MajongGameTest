@@ -1,17 +1,15 @@
-﻿using UnityEngine;
+﻿using System;
+using UI;
+using UnityEngine;
 
-namespace Kolya_sGame.UI
-{
-    public class UIWindow : MonoBehaviour, IUIWindow
+
+    public abstract class UIWindow : MonoBehaviour, IUIWindow
     {
-        public void Show()
-        {
-            
-        }
+        public Action ShowAction { get; set; }
+        public Action HideAction { get; set; }
+        
+        public IUIService UIService { get; set; }
 
-        public void Hide()
-        {
-
-        }
+        public abstract void Show();
+        public abstract void Hide();
     }
-}

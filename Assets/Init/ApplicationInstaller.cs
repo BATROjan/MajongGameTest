@@ -1,4 +1,6 @@
-﻿using Zenject;
+﻿using DefaultNamespace;
+using MainCamera;
+using Zenject;
 
 namespace Init
 {
@@ -6,7 +8,12 @@ namespace Init
     {
         public override void InstallBindings()
         {
-          
+            CameraInstaller
+                .Install(Container);
+            
+          UIRootInstaller
+              .Install(Container);
+          Container.Bind<GameController>().AsSingle().NonLazy();
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Kolya_sGame.UI
-{
+
     public class UIRoot : MonoBehaviour, IUIRoot
     {
         public Transform ActivateContainer => activateContainer;
@@ -12,4 +11,3 @@ namespace Kolya_sGame.UI
         [SerializeField] private Transform activateContainer;
         [SerializeField] private Transform deactivateContainer;
     }
-}
