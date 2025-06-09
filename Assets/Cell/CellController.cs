@@ -28,11 +28,11 @@ namespace DefaultNamespace.Cell
             var gridLayers = _gridController.GetGridLayers();
             for (int i = 0; i < gridLayers.Length; i++)
             {
-                var cellTransform = gridLayers[i].GridCells.CellsTransforms;
-                for (int j = 0; j < cellTransform.Length; j++)
+                var gridCellViews = gridLayers[i].GridCells.GridCellViews;
+                for (int j = 0; j < gridCellViews.Length; j++)
                 {
                     _cellView = _cellPool.Spawn();
-                    _cellView.transform.SetParent(cellTransform[j],false);
+                    _cellView.transform.SetParent(gridCellViews[j].transform,false);
                     _cellView.CellImage.sprite = sprite.Sprite;
                 }
             }

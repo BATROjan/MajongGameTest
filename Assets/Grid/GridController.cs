@@ -1,4 +1,5 @@
-﻿using UI;
+﻿using ModestTree;
+using UI;
 using UI.GameWindow;
 
 namespace DefaultNamespace.Grid
@@ -26,6 +27,20 @@ namespace DefaultNamespace.Grid
         public GridLayer[] GetGridLayers()
         {
             return gridView.Layers;
+        }
+
+        public void DeletCellFromClosenList(GridCellView deletedCellView, GridCellView targetView)
+        {
+            var list = targetView.ClosenGridViews;
+            foreach (var cell in list)
+            {
+                if (cell == deletedCellView)
+                {
+                    var targetlist = list;
+                        targetlist.RemoveWithConfirm(deletedCellView);
+                    targetView.ClosenGridViews = list;
+                }
+            }
         }
     }
 }

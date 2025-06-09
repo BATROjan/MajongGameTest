@@ -8,8 +8,10 @@ namespace DefaultNamespace.Grid
     public class GridView :MonoBehaviour
     {
         public GridLayer[] Layers => layers;
+       
 
         [SerializeField] private GridLayer[] layers;
+        
         public class Pool : MonoMemoryPool<GridView>
         {
         
@@ -25,6 +27,6 @@ namespace DefaultNamespace.Grid
     [Serializable]
     public struct GridCells
     {
-        public Transform[] CellsTransforms;
+        public GridCellView[] GridCellViews;
     }
 }

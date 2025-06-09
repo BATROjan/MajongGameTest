@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using DefaultNamespace.Grid;
+using UnityEngine;
 
 namespace UI.GameWindow
 {
     public class GameWindowView : UIWindow
     {
+        public GridCellView DeleteCellView;
+        public GridCellView TargetCellView;
         public UIButton[] Buttons => buttons;
         
         [SerializeField] private UIButton[] buttons;
