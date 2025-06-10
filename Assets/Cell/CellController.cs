@@ -21,21 +21,11 @@ namespace DefaultNamespace.Cell
             _gridController = gridController;
         }
 
-        public void SpawnCells()
+        public void SpawnCells(GridCellView cellView, Sprite sprite)
         {
-            var sprite = _cellConfig.GetModel(Random.Range(0, _cellConfig.GetModelLengs()));
-            
-            var gridLayers = _gridController.GetGridLayers();
-            for (int i = 0; i < gridLayers.Length; i++)
-            {
-                var gridCellViews = gridLayers[i].GridCells.GridCellViews;
-                for (int j = 0; j < gridCellViews.Length; j++)
-                {
-                    _cellView = _cellPool.Spawn();
-                    _cellView.transform.SetParent(gridCellViews[j].transform,false);
-                    _cellView.CellImage.sprite = sprite.Sprite;
-                }
-            }
+            _cellView = _cellPool.Spawn();
+            _cellView.transform.SetParent(cellView.transform,false);
+            _cellView.CellImage.sprite = sprite;
         }
     }
 }

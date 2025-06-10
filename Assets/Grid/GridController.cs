@@ -1,4 +1,6 @@
-﻿using ModestTree;
+﻿using System.Collections.Generic;
+using System.Linq;
+using ModestTree;
 using UI;
 using UI.GameWindow;
 
@@ -9,6 +11,7 @@ namespace DefaultNamespace.Grid
         private readonly IUIService _uiService;
         private readonly GridView.Pool _gridPool;
         private GridView gridView;
+        private Dictionary<int, List<GridCellView>> _cellViews = new();
         
         public GridController(
             IUIService uiService,
@@ -22,6 +25,21 @@ namespace DefaultNamespace.Grid
         {
             gridView = _gridPool.Spawn();
             gridView.gameObject.transform.SetParent(_uiService.Get<GameWindowView>().transform, false);
+            for (int i = 0; i < gridView.Layers.Length; i++)
+            {
+                List<GridCellView> list = new List<GridCellView>();
+
+                foreach (var cell in  gridView.Layers[i].GridCells.GridCellViews)
+                {
+                    list.Add(cell);
+                }
+                _cellViews.Add(i,list);
+            }
+        }
+
+        public Dictionary<int, List<GridCellView>> GetDictionary()
+        {
+            return _cellViews;
         }
 
         public GridLayer[] GetGridLayers()
@@ -31,15 +49,11 @@ namespace DefaultNamespace.Grid
 
         public void DeletCellFromClosenList(GridCellView deletedCellView, GridCellView targetView)
         {
-            var list = targetView.ClosenGridViews;
-            foreach (var cell in list)
+            var list = targetView.ClosenGridViews.ToList();
+            foreach (var cell in list.ToList())
             {
-                if (cell == deletedCellView)
-                {
-                    var targetlist = list;
-                        targetlist.RemoveWithConfirm(deletedCellView);
-                    targetView.ClosenGridViews = list;
-                }
+                    list.RemoveAll(cell => cell == deletedCellView);
+                    targetView.ClosenGridViews = list.ToArray();
             }
         }
     }
