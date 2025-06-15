@@ -12,7 +12,7 @@ namespace DefaultNamespace.Path
         private readonly CellController _cellController;
         private readonly CellConfig _cellConfig;
 
-
+        private Queue<GridCellView> cellQueue = new();
         public PathController(
             GridController gridController, 
             CellController cellController,
@@ -26,29 +26,53 @@ namespace DefaultNamespace.Path
         public void SpawnPath()
         {
             var dict = _gridController.GetDictionary();
-            for (int i = dict.Keys.Count-1; i > 0; i--)
-            {
-                var lastList = dict[i];
-                List<GridCellView> selectedCellViews = new List<GridCellView>();
-                foreach (var cell in dict[i].ToList())
-                {
-                    if (dict[i].Count % 2 ==0)
-                    {
-                        selectedCellViews.Add(cell);
-                        if (selectedCellViews.Count == 2)
-                        {
-                            var sprite = _cellConfig.GetModel(Random.Range(0, _cellConfig.GetModelLengs()));
+            List<GridCellView> allVariantCellViews = new ();
+            List<GridCellView> selectedCellViews = new ();
+            
+            allVariantCellViews = dict[dict.Keys.Count-1];
 
-                            foreach (var item in selectedCellViews)
+            foreach (var cell in allVariantCellViews.ToList())
+            {
+                selectedCellViews.Add(cell);
+                cellQueue.Enqueue(cell);
+                var dictList = dict[cell.CellDictID-1];
+                if (dictList != null)
+                {
+                    foreach (var item in dictList)
+                    {
+                        var itemList = item.ClosenGridViews.ToList();
+                    
+                        foreach (var closenCell in item.ClosenGridViews.ToList())
+                        {
+                            if (closenCell == cell)
                             {
-                                _cellController.SpawnCells(item, sprite.Sprite);
+                                itemList.RemoveAll(cellB => cellB == cell);
+                                if (itemList.Count == 0)
+                                {
+                                    allVariantCellViews.Add(cell);
+                                }
                             }
                         }
-                        lastList.RemoveAll(cell => cell == cell);  
-                    }
+                    } 
                 }
+                
+                if (selectedCellViews.Count == 2)
+                {
+                    AddSpriteToCells(selectedCellViews);
+                    selectedCellViews.Clear();
+                }
+                allVariantCellViews.RemoveAll(cellA => cellA == cell);  
             }
-            
+        }
+
+        private void AddSpriteToCells(List<GridCellView> selectedCellViews)
+        {
+            var sprite = _cellConfig.GetModel(Random.Range(0, _cellConfig.GetModelLengs()));
+
+            foreach (var item in selectedCellViews)
+            {
+                _cellController.SpawnCells(item, sprite.Sprite);
+            }
         }
     }
 }
