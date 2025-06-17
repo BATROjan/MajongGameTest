@@ -10,7 +10,7 @@ namespace DefaultNamespace.Grid
     {
         private readonly IUIService _uiService;
         private readonly GridView.Pool _gridPool;
-        private GridView gridView;
+        private GridView _gridView;
         private Dictionary<int, List<GridCellView>> _cellViews = new();
         
         public GridController(
@@ -23,13 +23,13 @@ namespace DefaultNamespace.Grid
 
         public void SpawnGrid()
         {
-            gridView = _gridPool.Spawn();
-            gridView.gameObject.transform.SetParent(_uiService.Get<GameWindowView>().transform, false);
-            for (int i = 0; i < gridView.Layers.Length; i++)
+            _gridView = _gridPool.Spawn();
+            _gridView.gameObject.transform.SetParent(_uiService.Get<GameWindowView>().transform, false);
+            for (int i = 0; i < _gridView.Layers.Length; i++)
             {
                 List<GridCellView> list = new List<GridCellView>();
 
-                foreach (var cell in  gridView.Layers[i].GridCells.GridCellViews)
+                foreach (var cell in  _gridView.Layers[i].GridCells.GridCellViews)
                 {
                     list.Add(cell);
                 }
@@ -42,11 +42,35 @@ namespace DefaultNamespace.Grid
             return _cellViews;
         }
 
-        public GridLayer[] GetGridLayers()
+        public GridView GetView()
         {
-            return gridView.Layers;
+            return _gridView;
         }
 
+        public GridLayer[] GetGridLayers()
+        {
+            return _gridView.Layers;
+        }
+
+        public int GetCellCount()
+        {
+            int count = 0;
+            foreach (var layer in _gridView.Layers)
+            {
+                count += layer.GridCells.GridCellViews.Length;
+            }
+            return count;
+        }
+
+        public List<GridCellView> GetListOfView()
+        {
+            List<GridCellView> list = new();
+            foreach (var layer in _gridView.Layers)
+            {
+                list.AddRange(layer.GridCells.GridCellViews);
+            }
+            return list;
+        }
         public void DeletCellFromClosenList(GridCellView deletedCellView, GridCellView targetView)
         {
             var list = targetView.ClosenGridViews.ToList();

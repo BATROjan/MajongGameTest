@@ -25,54 +25,53 @@ namespace DefaultNamespace.Path
 
         public void SpawnPath()
         {
-            var dict = _gridController.GetDictionary();
-            List<GridCellView> allVariantCellViews = new ();
-            List<GridCellView> selectedCellViews = new ();
-            
-            allVariantCellViews = dict[dict.Keys.Count-1];
-
-            foreach (var cell in allVariantCellViews.ToList())
+            var view = _gridController.GetView();
+            var list = _gridController.GetListOfView();
+            List<GridCellView> currentList = new();
+            foreach (var cell in list)
             {
-                selectedCellViews.Add(cell);
-                cellQueue.Enqueue(cell);
-                var dictList = dict[cell.CellDictID-1];
-                if (dictList != null)
+                if (cell.ClosenGridViews.Length == 0)
                 {
-                    foreach (var item in dictList)
+                    currentList.Add(cell);
+                }
+            }
+            for (int i = 0; i < list.Count; i++)
+            {
+
+                var sprite = _cellConfig.GetModel(Random.Range(0, _cellConfig.GetModelLengs()));
+                
+                for (int j = 0; j < 2; j++)
+                {
+                    foreach (var cell in currentList.ToList())
                     {
-                        var itemList = item.ClosenGridViews.ToList();
-                    
-                        foreach (var closenCell in item.ClosenGridViews.ToList())
+                        var sss = currentList.Where(x => x != cell).ToList();
+
+                        _cellController.SpawnCells(cell, sprite.Sprite);
+                        foreach (var closenView in cell.UnderGridViews)
                         {
-                            if (closenCell == cell)
+                            // Создаем новый список без текущего cell
+                            var newClosenList = closenView.ClosenGridViews.Where(x => x != cell).ToList();
+                            // Здесь нужно как-то обновить ClosenGridViews в closenView,
+                            // но это зависит от того, как у вас реализована структура данных
+                            // Например, если ClosenGridViews - это свойство с сеттером:
+                            // closenView.ClosenGridViews = newClosenList.ToArray();
+                            closenView.ClosenGridViews = newClosenList.ToArray();
+                            if (newClosenList.Count == 0)
                             {
-                                itemList.RemoveAll(cellB => cellB == cell);
-                                if (itemList.Count == 0)
-                                {
-                                    allVariantCellViews.Add(cell);
-                                }
+                                currentList.Add(closenView);
                             }
                         }
-                    } 
+                    }
+
                 }
                 
-                if (selectedCellViews.Count == 2)
-                {
-                    AddSpriteToCells(selectedCellViews);
-                    selectedCellViews.Clear();
-                }
-                allVariantCellViews.RemoveAll(cellA => cellA == cell);  
             }
         }
 
-        private void AddSpriteToCells(List<GridCellView> selectedCellViews)
+        private void AddSpriteToCells(GridCellView selectedCellView)
         {
             var sprite = _cellConfig.GetModel(Random.Range(0, _cellConfig.GetModelLengs()));
-
-            foreach (var item in selectedCellViews)
-            {
-                _cellController.SpawnCells(item, sprite.Sprite);
-            }
+            _cellController.SpawnCells(selectedCellView, sprite.Sprite);
         }
     }
 }
