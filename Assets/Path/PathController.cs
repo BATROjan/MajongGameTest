@@ -35,34 +35,40 @@ namespace DefaultNamespace.Path
                     currentList.Add(cell);
                 }
             }
-            for (int i = 0; i < list.Count; i++)
+            for (int i = 0; i < list.Count/2; i++)
             {
-
+                List<GridCellView> spawnCellViews = new();
+                List<GridCellView> deleteCellViews = new();
+                List<GridCellView> addCellViews = new();
                 var sprite = _cellConfig.GetModel(Random.Range(0, _cellConfig.GetModelLengs()));
                 
                 for (int j = 0; j < 2; j++)
-                {
-                    foreach (var cell in currentList.ToList())
+                { 
+                    int id = Random.Range(0, currentList.Count);
+                    Debug.Log(i);
+                    spawnCellViews.Add(currentList[id]);
+                    foreach (var closenView in currentList[id].UnderGridViews)
                     {
-                        var sss = currentList.Where(x => x != cell).ToList();
-
-                        _cellController.SpawnCells(cell, sprite.Sprite);
-                        foreach (var closenView in cell.UnderGridViews)
+                        var newClosenList = closenView.ClosenGridViews.Where(x => x != currentList[id]).ToList();
+                        closenView.ClosenGridViews = newClosenList.ToArray();
+                            
+                        if (newClosenList.Count == 0)
                         {
-                            // Создаем новый список без текущего cell
-                            var newClosenList = closenView.ClosenGridViews.Where(x => x != cell).ToList();
-                            // Здесь нужно как-то обновить ClosenGridViews в closenView,
-                            // но это зависит от того, как у вас реализована структура данных
-                            // Например, если ClosenGridViews - это свойство с сеттером:
-                            // closenView.ClosenGridViews = newClosenList.ToArray();
-                            closenView.ClosenGridViews = newClosenList.ToArray();
-                            if (newClosenList.Count == 0)
-                            {
-                                currentList.Add(closenView);
-                            }
+                            addCellViews.Add(closenView);
                         }
                     }
 
+                    var newCurrentList = currentList.Where(x => x != currentList[id]).ToList();
+                    currentList = newCurrentList;
+                    
+                    if (spawnCellViews.Count == 2)
+                    {
+                        foreach (var cell in spawnCellViews)
+                        {
+                            _cellController.SpawnCells(cell, sprite.Sprite);
+                        }
+                        currentList.AddRange(addCellViews);
+                    }
                 }
                 
             }
