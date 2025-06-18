@@ -14,7 +14,7 @@ namespace DefaultNamespace.Path
         private readonly CellConfig _cellConfig;
 
         Dictionary<GridCellView, List<GridCellView>> dictionary = new Dictionary<GridCellView, List<GridCellView>>();
-        
+        List<GridCellView> _currentList = new();
         public PathController(
             GridController gridController, 
             CellController cellController,
@@ -23,20 +23,21 @@ namespace DefaultNamespace.Path
             _gridController = gridController;
             _cellController = cellController;
             _cellConfig = cellConfig;
+            cellController.OnActiveCells += ActiveNewCells;
         }
 
         public void SpawnPath()
         {
             var view = _gridController.GetView();
             var list = _gridController.GetListOfView();
-            List<GridCellView> currentList = new();
+            
             foreach (var cell in list)
             {
                 dictionary.Add(cell, cell.UnderGridViews.ToList());
                 cell.CloneCloseGridViews = cell.ClosenGridViews;
                 if (cell.ClosenGridViews.Length == 0)
                 {
-                    currentList.Add(cell);
+                    _currentList.Add(cell);
                 }
             }
             for (int i = 0; i < list.Count/2; i++)
@@ -48,12 +49,12 @@ namespace DefaultNamespace.Path
                 
                 for (int j = 0; j < 2; j++)
                 { 
-                    int id = Random.Range(0, currentList.Count);
+                    int id = Random.Range(0, _currentList.Count);
                     Debug.Log(i);
-                    spawnCellViews.Add(currentList[id]);
-                    foreach (var closenView in currentList[id].UnderGridViews)
+                    spawnCellViews.Add(_currentList[id]);
+                    foreach (var closenView in _currentList[id].UnderGridViews)
                     {
-                        var newClosenList = closenView.ClosenGridViews.Where(x => x != currentList[id]).ToList();
+                        var newClosenList = closenView.ClosenGridViews.Where(x => x != _currentList[id]).ToList();
                         closenView.ClosenGridViews = newClosenList.ToArray();
                             
                         if (newClosenList.Count == 0)
@@ -62,8 +63,8 @@ namespace DefaultNamespace.Path
                         }
                     }
 
-                    var newCurrentList = currentList.Where(x => x != currentList[id]).ToList();
-                    currentList = newCurrentList;
+                    var newCurrentList = _currentList.Where(x => x != _currentList[id]).ToList();
+                    _currentList = newCurrentList;
                     
                     if (spawnCellViews.Count == 2)
                     {
@@ -71,7 +72,7 @@ namespace DefaultNamespace.Path
                         {
                             _cellController.SpawnCells(cell, model);
                         }
-                        currentList.AddRange(addCellViews);
+                        _currentList.AddRange(addCellViews);
                     }
                 }
                 
@@ -82,8 +83,27 @@ namespace DefaultNamespace.Path
                 if (cell.ClosenGridViews.Length == 0)
                 {
                     cell.CellView.BlackOut.gameObject.SetActive(false);
+                    _currentList.Add(cell);
                 }
             }
+        }
+
+        private void ActiveNewCells(List<GridCellView> cellViews)
+        {
+            for (int i = 0; i < cellViews.Count; i++)
+            {
+                foreach (var closenView in cellViews[i].UnderGridViews)
+                {
+                    var newClosenList = closenView.ClosenGridViews.Where(x => x != cellViews[i]).ToList();
+                    closenView.ClosenGridViews = newClosenList.ToArray();
+                            
+                    if (newClosenList.Count == 0)
+                    {
+                        closenView.CellView.BlackOut.gameObject.SetActive(false);
+                    }
+                } 
+            }
+ 
         }
     }
 }

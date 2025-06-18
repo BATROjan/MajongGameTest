@@ -1,10 +1,13 @@
-﻿using DefaultNamespace.Grid;
+﻿using System;
+using System.Collections.Generic;
+using DefaultNamespace.Grid;
 using UnityEngine;
 
 namespace DefaultNamespace.Cell
 {
     public class CellController
     {
+        public Action<List<GridCellView>> OnActiveCells;
         private readonly CellView.Pool _cellPool;
         private readonly CellConfig _cellConfig;
         private readonly GridController _gridController;
@@ -13,6 +16,7 @@ namespace DefaultNamespace.Cell
         private CellView _fistCell;
         private CellView _secondCell;
 
+        private List<GridCellView> _despawnCellViews = new List<GridCellView>();
         public CellController(
             CellView.Pool cellPool,
             CellConfig cellConfig,
@@ -30,6 +34,7 @@ namespace DefaultNamespace.Cell
             cellView.CellView = _cellView;
             _cellView.CellImage.sprite = model.Sprite;
             _cellView.CellType = model.CellType;
+            _cellView.ParentGridCellView = cellView;
             _cellView.OnCellSelected += CheckCell;
         }
 
@@ -38,18 +43,22 @@ namespace DefaultNamespace.Cell
             if (!_fistCell)
             {
                 _fistCell = cellView;
+                _despawnCellViews.Add(_fistCell.ParentGridCellView);
             }
             else if(_fistCell != cellView)
             {
                 _secondCell = cellView;
+                _despawnCellViews.Add(_secondCell.ParentGridCellView);
                 if (_fistCell.CellType == _secondCell.CellType)
                 {
                     _cellPool.Despawn(_fistCell);
                     _cellPool.Despawn(_secondCell);
-                    
-                    _fistCell = null;
-                    _secondCell = null;
+                    OnActiveCells?.Invoke(_despawnCellViews);
                 }
+
+                _despawnCellViews.Clear();
+                _fistCell = null;
+                _secondCell = null; 
             }
         }
     }

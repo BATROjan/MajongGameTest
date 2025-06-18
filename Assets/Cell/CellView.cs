@@ -1,4 +1,5 @@
 ﻿using System;
+using DefaultNamespace.Grid;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -19,6 +20,17 @@ namespace DefaultNamespace.Cell
             {
                 _cellType = value;
             }
+        }        
+        public GridCellView ParentGridCellView 
+        {
+            get
+            {
+                return _parentGridCellView;
+            }
+            set
+            {
+                _parentGridCellView = value;
+            }
         }
         public Image BlackOut => blackOut;
         public Image CellImage
@@ -35,6 +47,7 @@ namespace DefaultNamespace.Cell
        [SerializeField] private Image cellImage;
        [SerializeField] private Image blackOut;
        private CellType _cellType;
+       private GridCellView _parentGridCellView;
         public class  Pool : MonoMemoryPool<CellView>
         {
             
