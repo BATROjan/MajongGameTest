@@ -48,9 +48,21 @@ namespace DefaultNamespace.Cell
        [SerializeField] private Image blackOut;
        private CellType _cellType;
        private GridCellView _parentGridCellView;
+
+       private void DespawnItem(CellView item)
+       {
+          _cellType = CellType.None;
+          cellImage.sprite = null;
+          blackOut.gameObject.SetActive(true);
+          _parentGridCellView = null;
+       }
         public class  Pool : MonoMemoryPool<CellView>
         {
-            
+            protected override void OnDespawned(CellView item)
+            {
+                base.OnDespawned(item);
+                item.DespawnItem(item);
+            }
         }
 
         public void OnPointerClick(PointerEventData eventData)

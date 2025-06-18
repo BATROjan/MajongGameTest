@@ -19,7 +19,6 @@ namespace UI.GameWindow
             _gameWindowView = _uiService.Get<GameWindowView>();
             
             _gameWindowView.ShowAction += Show;
-            // _uiStartWindow.HideAction += UnSubscribeButtons;
         }
         private void Show()
         {
@@ -28,7 +27,7 @@ namespace UI.GameWindow
 
         private void InitButtons()
         {
-
+            _gameWindowView.Buttons[0].OnClick += _pathController.ResetLvL;
         }
 
     }

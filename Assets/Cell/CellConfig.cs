@@ -37,6 +37,7 @@ namespace DefaultNamespace.Cell
         Bananas,
         Becone,
         Beer,
-        Beet
+        Beet,
+        None
     }
 }

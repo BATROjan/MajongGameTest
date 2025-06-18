@@ -28,7 +28,8 @@ namespace DefaultNamespace.Grid
             for (int i = 0; i < _gridView.Layers.Length; i++)
             {
                 List<GridCellView> list = new List<GridCellView>();
-
+                _cellViews = new();
+                
                 foreach (var cell in  _gridView.Layers[i].GridCells.GridCellViews)
                 {
                     list.Add(cell);
@@ -79,6 +80,12 @@ namespace DefaultNamespace.Grid
                     list.RemoveAll(cell => cell == deletedCellView);
                     targetView.ClosenGridViews = list.ToArray();
             }
+        }
+
+        public void DespawnGrid()
+        {
+            _gridPool.Despawn(_gridView);
+            _gridView = null;
         }
     }
 }

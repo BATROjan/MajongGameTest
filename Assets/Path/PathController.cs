@@ -13,7 +13,7 @@ namespace DefaultNamespace.Path
         private readonly CellController _cellController;
         private readonly CellConfig _cellConfig;
 
-        Dictionary<GridCellView, List<GridCellView>> dictionary = new Dictionary<GridCellView, List<GridCellView>>();
+        Dictionary<GridCellView, List<GridCellView>> dictionary = new ();
         List<GridCellView> _currentList = new();
         public PathController(
             GridController gridController, 
@@ -28,7 +28,8 @@ namespace DefaultNamespace.Path
 
         public void SpawnPath()
         {
-            var view = _gridController.GetView();
+            _currentList = new();
+            dictionary = new ();
             var list = _gridController.GetListOfView();
             
             foreach (var cell in list)
@@ -43,7 +44,6 @@ namespace DefaultNamespace.Path
             for (int i = 0; i < list.Count/2; i++)
             {
                 List<GridCellView> spawnCellViews = new();
-                List<GridCellView> deleteCellViews = new();
                 List<GridCellView> addCellViews = new();
                 var model = _cellConfig.GetModel(Random.Range(0, _cellConfig.GetModelLengs()));
                 
@@ -103,7 +103,15 @@ namespace DefaultNamespace.Path
                     }
                 } 
             }
- 
+        }
+
+        public void ResetLvL()
+        {
+            _gridController.DespawnGrid();
+            _cellController.DespawAllCells();
+            
+            _gridController.SpawnGrid();
+            SpawnPath();
         }
     }
 }

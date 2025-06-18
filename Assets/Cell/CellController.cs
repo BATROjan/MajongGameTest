@@ -17,6 +17,7 @@ namespace DefaultNamespace.Cell
         private CellView _secondCell;
 
         private List<GridCellView> _despawnCellViews = new List<GridCellView>();
+        private List<CellView> _allCellViews = new();
         public CellController(
             CellView.Pool cellPool,
             CellConfig cellConfig,
@@ -30,6 +31,7 @@ namespace DefaultNamespace.Cell
         public void SpawnCells(GridCellView cellView, CellModel model)
         {
             _cellView = _cellPool.Spawn();
+            _allCellViews.Add(_cellView);
             _cellView.transform.SetParent(cellView.transform,false);
             cellView.CellView = _cellView;
             _cellView.CellImage.sprite = model.Sprite;
@@ -52,7 +54,9 @@ namespace DefaultNamespace.Cell
                 if (_fistCell.CellType == _secondCell.CellType)
                 {
                     _cellPool.Despawn(_fistCell);
+                    _allCellViews.Remove(_fistCell);
                     _cellPool.Despawn(_secondCell);
+                    _allCellViews.Remove(_secondCell);
                     OnActiveCells?.Invoke(_despawnCellViews);
                 }
 
@@ -60,6 +64,16 @@ namespace DefaultNamespace.Cell
                 _fistCell = null;
                 _secondCell = null; 
             }
+        }
+
+        public void DespawAllCells()
+        {
+            foreach (var cell in _allCellViews)
+            {
+                _cellView.OnCellSelected -= CheckCell;
+                _cellPool.Despawn(cell);
+            }
+            _allCellViews.Clear();
         }
     }
 }
