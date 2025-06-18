@@ -25,6 +25,7 @@ namespace DefaultNamespace.Cell
         {
             _cellView = _cellPool.Spawn();
             _cellView.transform.SetParent(cellView.transform,false);
+            cellView.CellView = _cellView;
             _cellView.CellImage.sprite = sprite;
         }
     }

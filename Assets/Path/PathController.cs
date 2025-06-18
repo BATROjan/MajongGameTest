@@ -2,6 +2,7 @@
 using System.Linq;
 using DefaultNamespace.Cell;
 using DefaultNamespace.Grid;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace DefaultNamespace.Path
@@ -12,7 +13,8 @@ namespace DefaultNamespace.Path
         private readonly CellController _cellController;
         private readonly CellConfig _cellConfig;
 
-        private Queue<GridCellView> cellQueue = new();
+        Dictionary<GridCellView, List<GridCellView>> dictionary = new Dictionary<GridCellView, List<GridCellView>>();
+        
         public PathController(
             GridController gridController, 
             CellController cellController,
@@ -30,6 +32,8 @@ namespace DefaultNamespace.Path
             List<GridCellView> currentList = new();
             foreach (var cell in list)
             {
+                dictionary.Add(cell, cell.UnderGridViews.ToList());
+                cell.CloneCloseGridViews = cell.ClosenGridViews;
                 if (cell.ClosenGridViews.Length == 0)
                 {
                     currentList.Add(cell);
@@ -71,6 +75,14 @@ namespace DefaultNamespace.Path
                     }
                 }
                 
+            }
+            foreach (var cell in list)
+            {
+                cell.ClosenGridViews = cell.CloneCloseGridViews;
+                if (cell.ClosenGridViews.Length == 0)
+                {
+                    cell.CellView.BlackOut.gameObject.SetActive(false);
+                }
             }
         }
 

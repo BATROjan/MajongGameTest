@@ -10,6 +10,5 @@ using UnityEngine.EventSystems;
         public void OnPointerClick(PointerEventData eventData)
         {
             OnClick?.Invoke();
-            Debug.Log("Click");
         }
     }

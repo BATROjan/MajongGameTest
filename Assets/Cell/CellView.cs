@@ -4,8 +4,9 @@ using Zenject;
 
 namespace DefaultNamespace.Cell
 {
-    public class CellView : MonoBehaviour
+    public class CellView : UIButton
     {
+        public Image BlackOut => blackOut;
         public Image CellImage
         {
             get
@@ -18,6 +19,7 @@ namespace DefaultNamespace.Cell
             }
         }
        [SerializeField] private Image cellImage;
+       [SerializeField] private Image blackOut;
         public class  Pool : MonoMemoryPool<CellView>
         {
             
