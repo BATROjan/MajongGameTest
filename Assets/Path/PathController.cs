@@ -44,7 +44,7 @@ namespace DefaultNamespace.Path
                 List<GridCellView> spawnCellViews = new();
                 List<GridCellView> deleteCellViews = new();
                 List<GridCellView> addCellViews = new();
-                var sprite = _cellConfig.GetModel(Random.Range(0, _cellConfig.GetModelLengs()));
+                var model = _cellConfig.GetModel(Random.Range(0, _cellConfig.GetModelLengs()));
                 
                 for (int j = 0; j < 2; j++)
                 { 
@@ -69,7 +69,7 @@ namespace DefaultNamespace.Path
                     {
                         foreach (var cell in spawnCellViews)
                         {
-                            _cellController.SpawnCells(cell, sprite.Sprite);
+                            _cellController.SpawnCells(cell, model);
                         }
                         currentList.AddRange(addCellViews);
                     }
@@ -84,12 +84,6 @@ namespace DefaultNamespace.Path
                     cell.CellView.BlackOut.gameObject.SetActive(false);
                 }
             }
-        }
-
-        private void AddSpriteToCells(GridCellView selectedCellView)
-        {
-            var sprite = _cellConfig.GetModel(Random.Range(0, _cellConfig.GetModelLengs()));
-            _cellController.SpawnCells(selectedCellView, sprite.Sprite);
         }
     }
 }

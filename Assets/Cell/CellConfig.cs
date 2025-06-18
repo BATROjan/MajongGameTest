@@ -23,7 +23,20 @@ namespace DefaultNamespace.Cell
     [Serializable]
     public struct CellModel
     {
-        public int id;
+        public CellType CellType;
         public Sprite Sprite;
+    }
+
+    public enum CellType
+    {
+        Acorn,
+        Amanita,
+        Apple,
+        Asparagus,
+        avocado,
+        Bananas,
+        Becone,
+        Beer,
+        Beet
     }
 }

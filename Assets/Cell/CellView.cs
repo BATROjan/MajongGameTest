@@ -1,11 +1,25 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zenject;
 
 namespace DefaultNamespace.Cell
 {
-    public class CellView : UIButton
+    public class CellView : MonoBehaviour, IPointerClickHandler
     {
+        public Action<CellView> OnCellSelected;
+        public CellType CellType 
+        {
+            get
+            {
+                return _cellType;
+            }
+            set
+            {
+                _cellType = value;
+            }
+        }
         public Image BlackOut => blackOut;
         public Image CellImage
         {
@@ -20,9 +34,15 @@ namespace DefaultNamespace.Cell
         }
        [SerializeField] private Image cellImage;
        [SerializeField] private Image blackOut;
+       private CellType _cellType;
         public class  Pool : MonoMemoryPool<CellView>
         {
             
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            OnCellSelected?.Invoke(this);
         }
     }
 }
